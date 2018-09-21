@@ -1,0 +1,20 @@
+{
+  "name": "botkit",
+  "version": "1.0.0",
+  "description": "Demo with Express and MongoDB",
+  "main": "server.js",
+  "author": "wolf",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "botkit": "^0.6.16",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.6",
+    "mongoose": "^5.2.16",
+    "winston": "^3.1.0"
+  }
+}
