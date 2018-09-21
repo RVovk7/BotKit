@@ -1,1 +1,1 @@
-# Botkit for Messenger, using Express and Mongo
+# Bot for Messenger, using Express and Mongo
