@@ -1,8 +1,15 @@
 const express = require('express'),
   http = require('http'),
   mongoose = require('mongoose'),
-  bodyParser = require('body-parser');
-  mongoose.connect('mongodb://admin:admin7@ds211613.mlab.com:11613/botkit')
+  bodyParser = require('body-parser'),
+  dotenv = require('dotenv');
+
+  if (process.env.NODE_ENV !== 'production') {
+    dotenv.load();
+  }
+
+
+  mongoose.connect('mongodb://admin:admin7@ds211613.mlab.com:11613/botkit', { useNewUrlParser: true })
   .then(() => console.log('DB running on port 3001'))
   .catch((e) => {
     console.error(`DB fail: ${e}`)
@@ -10,7 +17,12 @@ const express = require('express'),
 
   const app = express(),
   server = http.createServer(app);
-  const PORT = process.env.PORT || 3000;
+  app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
+
+
 
   const botSchema = new mongoose.Schema({
     user: {
@@ -31,8 +43,11 @@ const express = require('express'),
     next();
   });
   app.use(bodyParser.json());
+
+
+
   
 
-  server.listen(PORT, () => {
-    console.log("Express server listening on port " + PORT || 3000);
+  server.listen(process.env.PORT, () => {
+    console.log("Express server listening on port " + process.env.PORT );
   });
