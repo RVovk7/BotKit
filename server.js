@@ -1,53 +1,32 @@
-const express = require('express'),
-  http = require('http'),
-  mongoose = require('mongoose'),
-  bodyParser = require('body-parser'),
-  dotenv = require('dotenv');
+ import http from 'http';
+ import bodyParser from 'body-parser';
+ import dotenv from 'dotenv';
+ import express from 'express';
+ import { dbConnect } from './config/db';
+ import path from 'path';
 
-  if (process.env.NODE_ENV !== 'production') {
-    dotenv.load();
-  }
+ if (process.env.NODE_ENV !== 'production') dotenv.load();
 
+ const app = express();
+ const server = http.createServer(app);
+ const PORT = process.env.PORT;
+ dbConnect();
 
-  mongoose.connect('mongodb://admin:admin7@ds211613.mlab.com:11613/botkit', { useNewUrlParser: true })
-  .then(() => console.log('DB running on port 3001'))
-  .catch((e) => {
-    console.error(`DB fail: ${e}`)
-  });
-
-  const app = express(),
-  server = http.createServer(app);
-  app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+ app.use(bodyParser.urlencoded({
+   extended: true
+ }))
+ app.use(express.static(path.join(__dirname, 'public')));
 
 
+ app.use((req, res, next) => {
+   res.setHeader("Access-Control-Allow-Origin", "*");
+   res.setHeader("Access-Control-Allow-Credentials", "true");
+   res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+   res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+   next();
+ });
 
-
-
-  const botSchema = new mongoose.Schema({
-    user: {
-      type: String,
-      required: true,
-      minlength: 1
-    },
-
-  });
-
-  const DB = mongoose.model('botkit', botSchema);
-  
-  app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-    next();
-  });
-  app.use(bodyParser.json());
-
-
-
-  
-
-  server.listen(process.env.PORT, () => {
-    console.log("Express server listening on port " + process.env.PORT );
-  });
+server.listen(PORT, () => {
+   console.log("Express server listening on port " + PORT);
+ });
